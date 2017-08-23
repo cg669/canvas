@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="{CHARSET}">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<style type="text/css">
+			html,body{
+				height: 100%;
+				width: 100%;
+				padding: 0;
+				margin: 0;
+			}
+			canvas{
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas></canvas>
+		<script type="text/javascript">
+			const zcg = document.querySelector('canvas'); 
+			zcg.width = window.innerWidth;
+			zcg.height = window.innerHeight;
+			
+			var t = 0;
+			var s = 0.001;
+			const ctx = zcg.getContext('2d');
+			//眨眼睛
+			const draw = () => {
+				ctx.globalCompositeOperation = 'source-over';
+				ctx.fillStyle = 'hsla(0,0%,0%,.1)';
+				ctx.fillRect(0,0,zcg.width,zcg.height);
+				
+
+				let x,y,z;
+				
+				for (var i = 0; i < 400 ; i++ ){
+					z = 100 * Math.sin(i);
+					x = z*(2*Math.sin(t)-Math.sin(2*t));
+					y = z*(2*Math.cos(t)-Math.cos(2*t));
+					
+					if(y < 0){
+						y *= -1;
+					}
+					if(x < 0){
+						x *= -1;
+					}
+//					console.log(1)
+					ctx.globalCompositeOperation = '';
+					ctx.fillStyle = 'hsla(' + i + 12 + ',100%,60%,1)';
+					ctx.beginPath();
+					ctx.arc(Math.sin(i) * x + (zcg.width/2),Math.cos(i) * y + (zcg.height/2),1.5,0,Math.PI * 2,true);
+					
+					ctx.fill();
+				}
+				t += Math.PI / 360;
+				if(t >= 2 * Math.PI){
+					t = -2*Math.PI
+				}
+				return t;
+			}
+			//画个心我想
+			const heart = () => {
+				ctx.globalCompositeOperation = 'source-over';
+				ctx.fillStyle = 'hsla(0,0%,0%,.1)';
+				ctx.fillRect(0,0,zcg.width,zcg.height);
+				
+
+				let x,y,z;
+				
+				for (var i = 0; i < 400 ; i++ ){
+					z = t * 400;
+					x = z*(2*Math.sin(i)-Math.sin(2*i))*Math.pow(-1,Math.floor(Math.random() * 1000));
+					y = z*(2*Math.cos(i)-Math.cos(2*i));
+					
+					
+//					console.log(1)
+					ctx.globalCompositeOperation = '';
+					ctx.fillStyle = 'red';
+					ctx.beginPath();
+					ctx.arc(Math.sin(i) * x + (zcg.width/2),Math.cos(i) * y + (zcg.height/2),1.5,0,Math.PI * 2,true);
+					
+					ctx.fill();
+				}
+				
+				t += s;
+				if(t > 0.2 || t < 0){
+					s *= -1;
+				}
+				return t %= 2 * Math.PI;
+			}
+			const run = () => {
+				window.requestAnimationFrame(run);
+				heart()
+			};
+			
+			run()
+			window.onresize = () => {
+				zcg.width = window.innerWidth;
+				zcg.height = window.innerHeight;
+			}
+		</script>
+	</body>
+</html>
